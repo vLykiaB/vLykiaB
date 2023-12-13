@@ -1,7 +1,7 @@
-📌 Hello, I'm Batuhan
+📌 Hello, I'm LykiaB
 
-📌 I am Php Web developer and Ethical Hacker vs Fivem developer
+📌 I am Fivem Anticheat developer
 
-📌 If I Have References, I Provided Fivem 50 Server Development Service, I Made Many Websites at the Same Time
+📌 I have served as Anticheat supervisor on multiple Fivem Servers and my agreement with these servers continues, if you want help on your servers, it will be enough to reach out.
 
 
