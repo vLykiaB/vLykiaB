@@ -1,7 +1,5 @@
-📌 Hello, I'm LykiaB
+📌 Hello, I'm vLykiaB
 
-📌 I am Fivem & Game Anticheat developer
+📌 Anticheat developer
 
-📌 I have served as Anticheat supervisor on multiple Fivem Servers and my agreement with these servers continues, if you want help on your servers, it will be enough to reach out.
-
-
+📌 I am an Anti Cheat Developer and I am currently developing Anti Cheat software for many games and helping server owners in the games.
