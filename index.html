@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OTTR — Otter Society</title>
+<meta name="description" content="Otter Society — Base üzerinde on parçalık 1/1 koleksiyon. Sabit gardırop sistemi, iki register, tek kurallı nadirlik.">
+<meta property="og:title" content="OTTR — Otter Society">
+<meta property="og:description" content="Ten otters. One society. Every piece a one of one.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#62C4F2">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<a class="skip" href="#collection">İçeriğe atla</a>
+
+<!-- ======================= NAV ======================= -->
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="brand" href="#top" aria-label="OTTR ana sayfa">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-text">OTTR</span>
+    </a>
+
+    <nav class="nav-links" aria-label="Ana menü">
+      <a href="#collection">Koleksiyon</a>
+      <a href="#wardrobe">Gardırop</a>
+      <a href="#rarity">Nadirlik</a>
+      <a href="#roadmap">Yol Haritası</a>
+      <a href="#faq">SSS</a>
+    </nav>
+
+    <a class="btn btn-primary nav-cta" id="nav-opensea" href="#" target="_blank" rel="noopener noreferrer">
+      OpenSea <span aria-hidden="true">↗</span>
+    </a>
+
+    <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-mobile" aria-label="Menüyü aç">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="nav-mobile" id="nav-mobile" hidden>
+    <a href="#collection">Koleksiyon</a>
+    <a href="#wardrobe">Gardırop</a>
+    <a href="#rarity">Nadirlik</a>
+    <a href="#roadmap">Yol Haritası</a>
+    <a href="#faq">SSS</a>
+    <a class="mobile-cta" id="nav-opensea-m" href="#" target="_blank" rel="noopener noreferrer">OpenSea ↗</a>
+  </div>
+</header>
+
+<!-- ======================= HERO ======================= -->
+<section class="hero" id="top">
+  <div class="hero-water" aria-hidden="true">
+    <span></span><span></span><span></span><span></span>
+  </div>
+
+  <div class="hero-inner">
+    <p class="eyebrow reveal">
+      <span class="dot" aria-hidden="true"></span>
+      Base · ERC-1155 · Açık Koleksiyon
+    </p>
+
+    <h1 class="hero-title reveal">
+      <span class="wordmark" id="hero-wordmark" aria-label="OTTR">OTTR</span>
+    </h1>
+
+    <p class="hero-sub reveal" id="hero-name">Otter Society</p>
+    <p class="hero-tagline reveal" id="hero-tagline"></p>
+
+    <div class="hero-actions reveal">
+      <a class="btn btn-primary btn-lg" id="hero-opensea" href="#" target="_blank" rel="noopener noreferrer">
+        Koleksiyonu gör <span aria-hidden="true">↗</span>
+      </a>
+      <a class="btn btn-ghost btn-lg" href="#collection">On parçayı incele</a>
+    </div>
+
+    <dl class="hero-stats reveal" id="hero-stats"></dl>
+  </div>
+
+  <div class="hero-otters" id="hero-otters" aria-hidden="true"></div>
+</section>
+
+<!-- ======================= TICKER ======================= -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track" id="ticker-track"></div>
+</div>
+
+<!-- ======================= INTRO ======================= -->
+<section class="section intro" id="about">
+  <div class="wrap">
+    <div class="intro-grid">
+      <div class="reveal">
+        <h2 class="h2">Bir toplum,<br>on üye.</h2>
+      </div>
+      <div class="intro-body reveal">
+        <p class="lead" id="intro-text"></p>
+        <ul class="intro-facts" id="intro-facts"></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= COLLECTION ======================= -->
+<section class="section section-alt" id="collection">
+  <div class="wrap">
+    <header class="sec-head reveal">
+      <p class="kicker">Koleksiyon</p>
+      <h2 class="h2">On parça, her biri tek.</h2>
+      <p class="sec-note">
+        Sıralama price ladder'a göre: sade örgü tabanda, sahne kuran parçalar tepede.
+        Bir karta tıklayarak tüm slotlarını görebilirsiniz.
+      </p>
+    </header>
+
+    <div class="filters reveal" role="group" aria-label="Nadirlik filtresi">
+      <button class="chip is-active" data-filter="all">Tümü</button>
+      <button class="chip" data-filter="base">Base</button>
+      <button class="chip" data-filter="mid">Mid</button>
+      <button class="chip" data-filter="upper">Upper</button>
+      <button class="chip" data-filter="grail">Grail</button>
+    </div>
+
+    <div class="grid" id="otter-grid"></div>
+  </div>
+</section>
+
+<!-- ======================= WARDROBE ======================= -->
+<section class="section" id="wardrobe">
+  <div class="wrap">
+    <header class="sec-head reveal">
+      <p class="kicker">Gardırop</p>
+      <h2 class="h2">Altı sabit slot.</h2>
+      <p class="sec-note">
+        Her su samuru aynı iskeleti paylaşıyor. Karakteri tanınır kılan bu sabitlik;
+        farkı yaratan ise slotların nasıl doldurulduğu.
+      </p>
+    </header>
+
+    <div class="slots" id="slot-grid"></div>
+
+    <div class="rules reveal">
+      <article class="rule">
+        <h3>Knit ve chain birbirini dışlar</h3>
+        <p>
+          Bir parçada zincir varsa örgü yok, örgü varsa zincir yok. Koleksiyonun iki ayrı
+          yüzü — sakin register ve street register — aynı gövdede buluşmuyor.
+        </p>
+      </article>
+      <article class="rule">
+        <h3>Cam rengi bir ruh hâli sinyali</h3>
+        <p>
+          Yuvarlak çerçeve her parçada sabit kalıyor. Değişen tek şey camın rengi ve
+          o renk parçanın tonunu tek başına taşıyor.
+        </p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= RARITY ======================= -->
+<section class="section section-alt" id="rarity">
+  <div class="wrap">
+    <header class="sec-head reveal">
+      <p class="kicker">Nadirlik</p>
+      <h2 class="h2">Tek kural: örgüden uzaklaşmak.</h2>
+      <p class="sec-note">
+        Nadirlik rastgele dağıtılmadı. Sade örgü merdivenin tabanı; bir parça ondan
+        ne kadar ayrışıyorsa o kadar yukarıda duruyor.
+      </p>
+    </header>
+
+    <div class="registers reveal">
+      <article class="register register-knit">
+        <p class="register-kicker" lang="en">Register 01</p>
+        <h3>Calm Knit</h3>
+        <p>Örgü, forma, teknik parça. Sakin, günlük, tanıdık. Merdivenin tabanı ve orta katmanı.</p>
+        <p class="register-count" id="count-knit"></p>
+      </article>
+      <article class="register register-chain">
+        <p class="register-kicker" lang="en">Register 02</p>
+        <h3>Street Chain</h3>
+        <p>Zincir devreye girdiği anda kıyafet masadan kalkıyor. Daha yüksek sesli, daha nadir.</p>
+        <p class="register-count" id="count-chain"></p>
+      </article>
+      <article class="register register-scene">
+        <p class="register-kicker" lang="en">Register 03</p>
+        <h3>Scene</h3>
+        <p>Arka plan sudan çıkıp bir mekâna dönüşüyor ve elde bir şey beliriyor. Tek parça.</p>
+        <p class="register-count" id="count-scene"></p>
+      </article>
+    </div>
+
+    <div class="ladder reveal">
+      <h3 class="ladder-title">Price ladder</h3>
+      <ol class="ladder-list" id="ladder-list"></ol>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= ROADMAP ======================= -->
+<section class="section" id="roadmap">
+  <div class="wrap">
+    <header class="sec-head reveal">
+      <p class="kicker">Yol Haritası</p>
+      <h2 class="h2">Arz değil,<br>görünürlük önce.</h2>
+      <p class="sec-note">
+        İkinci batch bir takvime değil, mevcut setteki boşluklara ve koleksiyonun
+        ulaştığı görünürlüğe bağlı.
+      </p>
+    </header>
+    <div class="timeline" id="timeline"></div>
+  </div>
+</section>
+
+<!-- ======================= FAQ ======================= -->
+<section class="section section-alt" id="faq">
+  <div class="wrap wrap-narrow">
+    <header class="sec-head reveal">
+      <p class="kicker">SSS</p>
+      <h2 class="h2">Sık sorulanlar</h2>
+    </header>
+    <div class="faq" id="faq-list"></div>
+  </div>
+</section>
+
+<!-- ======================= FOOTER ======================= -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <span class="wordmark wordmark-sm" aria-label="OTTR">OTTR</span>
+        <p id="footer-tagline"></p>
+      </div>
+      <div class="footer-meta" id="footer-meta"></div>
+    </div>
+    <div class="footer-bottom">
+      <p id="footer-credit"></p>
+      <a id="footer-opensea" href="#" target="_blank" rel="noopener noreferrer">OpenSea ↗</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ======================= MODAL ======================= -->
+<div class="modal" id="modal" hidden>
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <button class="modal-close" data-close aria-label="Kapat">×</button>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/otter.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
