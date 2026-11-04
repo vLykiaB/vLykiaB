@@ -206,8 +206,6 @@ button { font: inherit; color: inherit; background: none; border: 0; }
      contains them horizontally while letting the top one overhang upward. */
   overflow-x: clip;
 }
-.opening-banner { max-width: 520px; margin-inline: auto; }
-.opening-banner img { width: 100%; }
 /* ---------- hero lockup ---------- */
 .opening-stage { position: relative; }
 
@@ -257,7 +255,6 @@ button { font: inherit; color: inherit; background: none; border: 0; }
   font-size: clamp(1.4rem, 2.6vw, 1.9rem); line-height: 1.25;
   color: var(--ink); margin: 0 0 1.4rem;
 }
-.opening-banner { margin-top: clamp(3rem, 6vw, 5rem); }
 .opening .standfirst { margin: 0 auto; }
 .opening-actions {
   display: flex; gap: 2.5rem; justify-content: center; flex-wrap: wrap;
