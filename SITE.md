@@ -52,22 +52,49 @@ Quiet luxury in the collection's own blue: pale blue paper, deep teal bars,
 hairline rules, Cormorant Garamond for display, Inter for everything small.
 
 Tokens live in `:root` at the top of `style.css`. They were sampled from the
-artwork, not invented — logo `#75CFFC`, banner `#5EACC2`, the four teal pieces
-`#55A8AE`.
+artwork, not invented — the bar is the logo's exact `#75CFFC`.
 
-**The bar is `#1C6B82`, not the logo blue, and that is deliberate.** White text
-on the logo's `#75CFFC` is 1.7:1 — unreadable. Deepening the same hue gets white
-to 6:1. If you change `--night`, re-check it; the verification script asserts it.
+**The bar carries dark text, not white, and that is forced.** White on `#75CFFC`
+is 1.7:1 and unreadable; one shade darker (`#2585A1`) still fails at 4.24:1.
+Only a deep teal takes white, and the brand wanted the light blue — so the text
+went dark instead. `--on-bar` and `--on-bar-mut` exist for exactly this; plain
+`--ink-2` is only 3.71:1 on the bar and must not be used there.
 
 Every text/background pair clears WCAG AA (4.5:1):
 
 | Pair | Ratio |
 |---|---|
-| white on `--night` | 6.04:1 |
-| `--ink` on `--paper` | 14.79:1 |
-| `--ink-2` on `--paper` | 5.94:1 |
-| `--ink-3` on `--paper` | 4.85:1 |
-| `--brass` on `--paper` | 4.76:1 |
+| `--ink` on `--paper` | 13.18:1 |
+| `--ink-2` on `--paper` | 5.29:1 |
+| `--ink-3` on `--paper` | 4.86:1 |
+| `--brass` on `--paper` | 4.87:1 |
+| `--on-bar` on `--bar` | 9.23:1 |
+| `--on-bar-mut` on `--bar` | 5.42:1 |
+
+Paper and bar separate by only 1.43:1, so both bands carry a `--rule-bar`
+hairline to stay distinct. Change either colour and re-run the check — it has
+caught four real regressions so far.
+
+## The wordmark and the cut-outs
+
+The logo lettering is drawn art, not a typeface. `assets/img/wordmark.webp` is
+the real OTTR lettering lifted out of the 2000px square logo: the cream letter
+fills were isolated by region-growing (they segment cleanly — four blobs, all
+~350px tall), then given a clean stroke in `#2A1410`, sampled from the logo's
+own outline. The original outline could not be cut directly because the otters
+sit behind the letters and share its colour.
+
+It renders at 620px against a 1486px intrinsic width — 2.4x headroom, so it
+stays sharp on a 2x screen. **Do not display it wider than ~740px**; the
+verification script fails the build below 2x.
+
+`Otter Society` has no logo artwork, so it is type: Baloo 2 at 800 with
+`-webkit-text-stroke` in the same cream and outline.
+
+`assets/img/peek/{03,05,09}.webp` are pieces 3, 5 and 9 flood-filled free of
+their flat backgrounds. They are masked with a bottom gradient because the
+source art is cropped flat at the chest, which otherwise reads as a sliced
+sticker. The layer is `pointer-events: none` and hidden below 860px.
 
 House rules:
 

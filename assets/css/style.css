@@ -8,18 +8,24 @@
   /* Sampled from the collection itself: logo #75CFFC, banner #5EACC2,
      the four teal pieces #55A8AE. The bar takes a deepened teal so white
      text on it clears WCAG AA — white on the logo blue is only 1.7:1. */
-  --paper:  #EFF7FB;
-  --panel:  #E2EEF5;
-  --ink:    #10242B;
-  --ink-2:  #45636D;
-  --ink-3:  #55707B;
-  --rule:   #C9DCE6;
-  --brass:  #8A6733;
-  --night:  #1C6B82;
+  --paper:      #D6ECFB;
+  --panel:      #C4E2F6;
+  --bar:        #75CFFC;   /* the logo blue exactly */
+  --ink:        #10242B;   /* 13.18:1 on paper, 9.23:1 on the bar */
+  --ink-2:      #45636D;   /* 5.29:1 on paper */
+  --ink-3:      #4E6872;   /* 4.86:1 — #55707B failed here at 4.32:1 */
+  --on-bar:     #10242B;   /* 9.23:1 on the bar */
+  --on-bar-mut: #2F4A54;   /* 5.42:1 — white and --ink-2 both fail on the bar */
+  --rule:       #A6C3D4;
+  --rule-bar:   #46A3D2;
+  --brass:      #7F5E2D;   /* 4.87:1 — #8A6733 failed here at 4.24:1 */
 
   --serif: "Cormorant Garamond", "Times New Roman", Times, serif;
   --sans:  "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
   --mono:  ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --round: "Baloo 2", "Trebuchet MS", system-ui, sans-serif;
+  --cream:   #FBEEDA;   /* the logo's letter fill */
+  --outline: #2A1410;   /* sampled from the logo's letter stroke */
 
   --wrap: 1240px;
   --nav-h: 64px;
@@ -55,7 +61,7 @@ button { font: inherit; color: inherit; background: none; border: 0; }
 
 .skip {
   position: absolute; left: -9999px; top: 0; z-index: 999;
-  background: var(--night); color: var(--paper); padding: 14px 22px;
+  background: var(--ink); color: var(--paper); padding: 14px 22px;
   font-size: .78rem; letter-spacing: .14em; text-transform: uppercase;
 }
 .skip:focus { left: 0; }
@@ -120,8 +126,9 @@ button { font: inherit; color: inherit; background: none; border: 0; }
 /* ---------- masthead ---------- */
 .mast {
   position: sticky; top: 0; z-index: 90;
-  background: var(--night);
-  color: var(--paper);
+  background: var(--bar);
+  color: var(--on-bar);
+  border-bottom: 1px solid var(--rule-bar);
 }
 .mast-inner {
   width: min(100% - 56px, var(--wrap)); margin-inline: auto;
@@ -132,9 +139,9 @@ button { font: inherit; color: inherit; background: none; border: 0; }
 
 .mast-brand {
   margin-right: auto; text-decoration: none;
-  font-family: var(--serif); font-weight: 400;
-  font-size: 1.5rem; letter-spacing: .34em;
-  color: var(--paper); padding-left: .2rem;
+  font-family: var(--round); font-weight: 800;
+  font-size: 1.35rem; letter-spacing: .12em;
+  color: var(--on-bar); padding-left: .2rem;
 }
 .mast-brand-sub { letter-spacing: .12em; }
 /* The full lockup plus the nav will not fit a 390px bar, and the nav is the
@@ -169,17 +176,17 @@ button { font: inherit; color: inherit; background: none; border: 0; }
 .social-mark:not(.is-soon) { opacity: .62; }
 .social-mark:not(.is-soon):hover { opacity: 1; }
 
-.mast .social-mark { color: var(--paper); }
+.mast .social-mark { color: var(--on-bar); }
 .foot .social { margin-top: 1.6rem; }
-.foot .social-mark { color: var(--paper); }
+.foot .social-mark { color: var(--on-bar); }
 .mast-nav a {
   text-decoration: none;
   font-size: .7rem; font-weight: 500;
   letter-spacing: .2em; text-transform: uppercase;
-  color: rgba(243, 240, 233, .62);
+  color: var(--on-bar-mut);
   transition: color .4s var(--ease);
 }
-.mast-nav a:hover, .mast-nav a[aria-current="page"] { color: var(--paper); }
+.mast-nav a:hover, .mast-nav a[aria-current="page"] { color: var(--on-bar); }
 
 /* ---------- sections ---------- */
 .section { padding: clamp(5rem, 11vw, 10rem) 0; }
@@ -192,16 +199,59 @@ button { font: inherit; color: inherit; background: none; border: 0; }
 .sec-head .standfirst { margin: 1.4rem 0 0; }
 
 /* ---------- opening ---------- */
-.opening { padding: clamp(4rem, 9vw, 7.5rem) 0 clamp(3.5rem, 7vw, 6rem); text-align: center; }
+.opening {
+  padding: clamp(4rem, 9vw, 7.5rem) 0 clamp(3.5rem, 7vw, 6rem);
+  text-align: center;
+  /* The otters are positioned past the edges on purpose. clip (not hidden)
+     contains them horizontally while letting the top one overhang upward. */
+  overflow-x: clip;
+}
 .opening-banner { max-width: 520px; margin-inline: auto; }
 .opening-banner img { width: 100%; }
-.opening .d-xl { margin-bottom: 1.2rem; }
-.lockup { display: inline-block; }
-.lockup-sub {
-  display: block; margin-top: .5rem; padding-top: 1rem;
-  border-top: 1px solid var(--rule);
-  font-size: .42em; letter-spacing: .14em; color: var(--ink-2);
+/* ---------- hero lockup ---------- */
+.opening-stage { position: relative; }
+
+.lockup { position: relative; z-index: 2; margin: 0; display: block; }
+.lockup-mark {
+  /* The real logo lettering, cut out of the square logo. Capped at half the
+     asset's intrinsic 1486px so it never softens on a 2x screen. */
+  width: min(72vw, 620px);
+  margin: 0 auto;
 }
+.lockup-sub {
+  display: block;
+  margin-top: .9rem;
+  font-family: var(--round);
+  font-weight: 800;
+  font-size: clamp(1.6rem, 4.4vw, 3rem);
+  line-height: 1;
+  letter-spacing: .01em;
+  color: var(--cream);
+  -webkit-text-stroke: .14em var(--outline);
+  paint-order: stroke fill;
+}
+
+/* ---------- peeking otters ---------- */
+.peek { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
+.peek img {
+  position: absolute; width: var(--w);
+  filter: drop-shadow(0 12px 22px rgba(16, 36, 43, .16));
+  /* The source art is cropped flat at the chest, which reads as a sliced
+     sticker. Fade the last stretch so each one dissolves instead. */
+  -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent 97%);
+          mask-image: linear-gradient(to bottom, #000 62%, transparent 97%);
+}
+.peek .p-left  { --w: 21%; left: -5%;  top: 14%;  rotate: -8deg; animation: drift 11s ease-in-out infinite; }
+.peek .p-right { --w: 20%; right: -4%; top: 18%;  rotate: 7deg;  animation: drift 13s ease-in-out infinite 1.5s; }
+/* High enough that only the cap and eyes clear the wordmark — any lower and
+   the body shows through the gaps between the letters. */
+.peek .p-top   { --w: 13%; left: 50%;  top: -46%; margin-left: -6.5%;
+                 animation: drift 15s ease-in-out infinite .8s; }
+@keyframes drift { 0%,100% { translate: 0 0; } 50% { translate: 0 -14px; } }
+
+/* Below this width they crowd the wordmark instead of framing it. */
+@media (max-width: 860px) { .peek { display: none; } }
+@media (prefers-reduced-motion: reduce) { .peek img { animation: none; } }
 .opening-sub {
   font-family: var(--serif); font-weight: 300;
   font-size: clamp(1.4rem, 2.6vw, 1.9rem); line-height: 1.25;
@@ -317,21 +367,21 @@ button { font: inherit; color: inherit; background: none; border: 0; }
 }
 
 /* ---------- footer ---------- */
-.foot { background: var(--night); color: rgba(243, 240, 233, .66); padding: clamp(3.5rem, 7vw, 5.5rem) 0 2.5rem; }
-.foot-top { display: flex; gap: clamp(2rem, 6vw, 5rem); flex-wrap: wrap; padding-bottom: 3rem; border-bottom: 1px solid rgba(243, 240, 233, .14); }
+.foot { background: var(--bar); color: var(--on-bar-mut); border-top: 1px solid var(--rule-bar); padding: clamp(3.5rem, 7vw, 5.5rem) 0 2.5rem; }
+.foot-top { display: flex; gap: clamp(2rem, 6vw, 5rem); flex-wrap: wrap; padding-bottom: 3rem; border-bottom: 1px solid var(--rule-bar); }
 .foot-brand { flex: 1 1 260px; }
 .foot-brand img { width: 68px; height: 68px; margin-bottom: 1.4rem; }
-.foot-brand p { margin: 0; max-width: 34ch; font-size: .95rem; }
+.foot-brand p { margin: 0; max-width: 34ch; font-size: .95rem; color: var(--on-bar-mut); }
 .foot-meta { display: grid; gap: .7rem; align-content: start; }
-.foot-meta div { display: flex; gap: 1.5rem; font-size: .85rem; }
-.foot-meta b { font-weight: 500; color: rgba(243, 240, 233, .45); min-width: 7.5rem; letter-spacing: .1em; text-transform: uppercase; font-size: .66rem; align-self: center; }
+.foot-meta div { display: flex; gap: 1.5rem; font-size: .85rem; color: var(--on-bar); }
+.foot-meta b { font-weight: 500; color: var(--on-bar-mut); min-width: 7.5rem; letter-spacing: .1em; text-transform: uppercase; font-size: .66rem; align-self: center; }
 .foot-bottom {
   display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
   padding-top: 1.8rem; font-size: .72rem; letter-spacing: .12em; text-transform: uppercase;
-  color: rgba(243, 240, 233, .42);
+  color: var(--on-bar-mut);
 }
-.foot-bottom a { color: rgba(243, 240, 233, .78); text-decoration: none; }
-.foot-bottom a:hover { color: var(--paper); }
+.foot-bottom a { color: var(--on-bar); text-decoration: none; }
+.foot-bottom a:hover { color: var(--brass); }
 .foot-contract { font-family: var(--mono); font-size: .76rem; letter-spacing: 0; text-transform: none; word-break: break-all; }
 
 /* ---------- overlay ---------- */
