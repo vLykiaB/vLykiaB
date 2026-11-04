@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Collection — OTTR</title>
+<meta name="description" content="All ten pieces of Otter Society, with full trait breakdown and distribution across the set.">
+<meta property="og:title" content="The Collection — OTTR">
+<meta property="og:description" content="All ten pieces of Otter Society.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="assets/img/banner.webp">
+<meta name="theme-color" content="#14130F">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<a class="skip" href="#grid">Skip to the pieces</a>
+
+<header class="mast">
+  <div class="mast-inner">
+    <a class="mast-brand" href="index.html">OTTR</a>
+    <nav class="mast-nav" aria-label="Primary">
+      <a href="collection.html" aria-current="page">Collection</a>
+      <a id="mast-os" href="#" target="_blank" rel="noopener noreferrer">OpenSea</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- ===================== HEAD ===================== -->
+  <section class="section-tight" style="padding-top: clamp(3.5rem, 7vw, 6rem)">
+    <div class="wrap">
+      <header class="sec-head reveal" style="margin-bottom: 0">
+        <p class="label">Ten pieces, each a 1 of 1</p>
+        <h1 class="display d-xl">The Collection</h1>
+        <p class="standfirst">
+          Listed in token order. Price and availability live on OpenSea —
+          select any piece to see its full wardrobe.
+        </p>
+      </header>
+    </div>
+  </section>
+
+  <!-- ===================== GRID ===================== -->
+  <section class="section" id="grid" style="padding-top: clamp(2.5rem, 5vw, 4rem)">
+    <div class="wrap">
+      <div class="plates plates-2" id="piece-grid"></div>
+    </div>
+  </section>
+
+  <!-- ===================== DISTRIBUTION ===================== -->
+  <section class="section rule-top">
+    <div class="wrap">
+      <header class="sec-head reveal">
+        <p class="label">Distribution</p>
+        <h2 class="display d-lg">Every value in the set.</h2>
+        <p class="standfirst">
+          With a supply of ten, each piece carries a tenth of the collection.
+          Nothing here is generated — the counts are the whole set.
+        </p>
+      </header>
+      <div class="dist" id="dist"></div>
+    </div>
+  </section>
+
+  <!-- ===================== OPEN SLOTS ===================== -->
+  <section class="section rule-top">
+    <div class="wrap"><div class="col-narrow">
+      <header class="sec-head reveal">
+        <p class="label">Not in the set</p>
+        <h2 class="display d-lg">What was left out.</h2>
+        <p class="standfirst">
+          These values do not exist yet. A second batch defined by filling them
+          keeps each new piece meaningful rather than additive.
+        </p>
+      </header>
+      <dl class="slots reveal" id="slots"></dl>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <img src="assets/img/logo.webp" width="56" height="56" alt="" loading="lazy" decoding="async">
+        <p id="foot-tagline"></p>
+      </div>
+      <div class="foot-meta" id="foot-meta"></div>
+    </div>
+    <div class="foot-bottom">
+      <p id="foot-credit"></p>
+      <a id="foot-os" href="#" target="_blank" rel="noopener noreferrer">OpenSea &#8599;</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ===================== OVERLAY ===================== -->
+<div class="ov" id="ov" hidden>
+  <div class="ov-backdrop" data-close></div>
+  <div class="ov-card" role="dialog" aria-modal="true" aria-labelledby="ov-title">
+    <button class="ov-close" data-close aria-label="Close">&#215;</button>
+    <div id="ov-body"></div>
+  </div>
+</div>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

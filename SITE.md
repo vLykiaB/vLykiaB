@@ -1,62 +1,72 @@
-# OTTR — Otter Society | Web sitesi
+# OTTR — Otter Society | Website
 
-Statik site. Build adımı yok, bağımlılık yok. `index.html`'i açmak yeterli.
+Static two-page site. No build step, no dependencies, no framework.
+Open `index.html` and it runs.
 
-## Dosyalar
+## Files
 
 ```
-index.html              sayfa iskeleti (bölümler, modal, nav)
-assets/css/style.css    tüm stiller — palet en üstte :root içinde
-assets/js/data.js       ← İÇERİK BURADA. Tek düzenleme noktası.
-assets/js/otter.js      gerçek görsel yokken çizilen prosedürel SVG yer tutucu
-assets/js/main.js       arayüz: ızgara, filtre, modal, menü, scroll reveal
-assets/img/otters/      koleksiyon görselleri (bkz. içindeki README)
+index.html              Landing page — banner, statement, facts, three pieces, rules
+collection.html         The gallery — all ten pieces, trait distribution, open slots
+assets/css/style.css    All styling. Design tokens at the top, in :root
+assets/js/data.js       ← ALL CONTENT LIVES HERE. Single edit point
+assets/js/main.js       Shared behaviour: footer, grids, overlay, scroll reveal
+assets/img/otters/      01–10.webp display art, master/ holds the 2000px originals
+assets/img/banner.webp  Horizontal logo, used on the landing page
+assets/img/logo.webp    Square logo, used in the footer
 ```
 
-## İçerik nasıl değiştirilir
+## Editing content
 
-Neredeyse her şey `assets/js/data.js` içinde:
+Everything the pages display comes from `assets/js/data.js`, transcribed from
+`traits.md`:
 
-| Değişken | Ne tutuyor |
+| Export | Holds |
 |---|---|
-| `COLLECTION` | isim, zincir, standart, arz, creator fee, OpenSea linki, tagline |
-| `WARDROBE` | altı slot ve açıklamaları (`filled: false` → boş slot görünümü) |
-| `TIERS` | nadirlik katmanları |
-| `OTTERS` | on parça — isim, tier, register, sıra, trait'ler, görsel yolu |
-| `ROADMAP` | yol haritası adımları (`status`: `done` / `active` / `next`) |
-| `FAQ` | soru-cevaplar |
+| `COLLECTION` | Name, chain, standard, contract, supply, creator fee, OpenSea URL, the headline and standfirst |
+| `TIERS` | The five rarity tiers |
+| `PIECES` | The ten pieces — name, tier, note, six traits each |
+| `DISTRIBUTION` | Trait counts across the set, shown on the collection page |
+| `RULES` | The four design rules, shown on the landing page |
+| `OPEN_SLOTS` | Values not yet in the set |
 
-HTML'e dokunmadan parça ekleyip çıkarabilirsiniz; ızgara, price ladder,
-register sayaçları ve filtreler listeden otomatik üretiliyor.
+Both pages read from these, so adding or removing a piece needs no HTML
+changes — the grid, the featured row and the overlay all follow the list.
 
-## Gerçek görselleri bağlama
+### Prices
 
-1. Görselleri `assets/img/otters/` içine koyun (kare, en az 1200×1200).
-2. `data.js` içinde ilgili parçanın `img` alanını doldurun:
-   ```js
-   { id: 1, name: "White Knit", ..., img: "assets/img/otters/01.png" }
-   ```
+`PIECES[n].price` carries the listed figure from `traits.md`, but **nothing on
+the site renders it**. OpenSea is the source of truth for price and
+availability, so the site never shows a number that can go stale. To change
+that, render `p.price` in the overlay in `assets/js/main.js`.
 
-`img` boş kaldığı sürece prosedürel SVG çizim gösterilir, yani site hiçbir
-aşamada kırık görünmez.
+### Replacing artwork
 
-## Yayına alma
+Drop a new file into `assets/img/otters/` as `NN.webp` (1200 × 1200) and the
+same into `master/` (2000 × 2000). Filenames map to piece numbers, which map to
+token IDs. Nothing else needs editing.
 
-- **GitHub Pages** — Settings › Pages › bu branch, kök dizin.
-  (`.nojekyll` zaten ekli, `assets/` klasörünün işlenmesini engelliyor.)
-- **Vercel / Netlify** — framework "Other", build komutu yok, output kök dizin.
+## Design
 
-## Palet
+Quiet luxury: bone paper, hairline rules, Cormorant Garamond for display, Inter
+for everything small. The artwork supplies the only colour on the page.
 
-Logodan alındı: gök mavisi su (`--sky-*`), krem kabarık harf (`--cream-*`),
-sıcak kahve kürk (`--fur`), koyu kahve kontur (`--ink`). Gözlük camlarından
-gelen üç vurgu: `--amber`, `--pink`, `--green`. Hepsi `style.css` başındaki
-`:root` bloğunda.
+Tokens live in `:root` at the top of `style.css`. House rules:
 
-## Not
+- Borders are `1px` and nothing else. No shadows, no border radius.
+- `--brass` is for hairlines and small marks only — never a fill.
+- Hover is an opacity shift or a hairline darkening. Nothing moves.
+- Both pages are `lang="en"`. Keep it that way — CSS `text-transform:
+  uppercase` under `lang="tr"` turns "REGISTER" into "REGİSTER".
 
-Graph dosyasından gelen veriler (zincir, standart, arz, creator fee, slot
-sistemi, register ayrımı, price ladder sırası) birebir kullanıldı. Parçaların
-**tek tek trait değerleri** (örn. "Still Water", "Clear Round") ve
-blurb metinleri graph'ta yoktu — bunlar doldurulmuş yer tutuculardır ve
-gerçek metadata ile değiştirilmelidir.
+## Deploying
+
+- **GitHub Pages** — Settings › Pages › this branch, root directory.
+  `.nojekyll` is already present so `assets/` is served untouched.
+- **Vercel / Netlify** — framework "Other", no build command, output is the
+  root directory.
+
+## Note on `README.md`
+
+The repository root `README.md` is the GitHub **profile** README and has
+nothing to do with this site. Leave it alone.

@@ -1,26 +1,15 @@
-# Koleksiyon görselleri
+# Collection artwork
 
-Gerçek görselleri bu klasöre koyun:
+| File | Piece |
+|---|---|
+| `01.webp` … `10.webp` | Display versions, 1200 × 1200, ~55 KB each |
+| `master/01.webp` … `master/10.webp` | Originals, 2000 × 2000 — source of truth |
 
-```
-assets/img/otters/01.png   →  Otter #1  White Knit
-assets/img/otters/02.png   →  Otter #2  Navy Knit
-...
-assets/img/otters/10.png   →  Otter #10 The Desk
-```
+File number matches the piece number, which matches the token ID.
 
-Sonra `assets/js/data.js` içinde ilgili parçanın `img` alanını doldurun:
+Grid plates use the 1200 px versions; the detail overlay uses the masters.
+To replace a piece, drop in both sizes under the same filename — nothing else
+needs changing.
 
-```js
-{ id: 1, name: "White Knit", ..., img: "assets/img/otters/01.png" }
-```
-
-`img` boş bırakıldığı sürece site, `assets/js/otter.js` içindeki prosedürel
-SVG çizimini yer tutucu olarak kullanır.
-
-**Öneri:** kare (1:1), en az 1200×1200, PNG veya WebP.
-
-## Logolar
-
-- `assets/img/logo-square.png` — üç su samuru + OTTR kare logo
-- `assets/img/banner.png` — iki su samuru + OTTR yatay banner
+Names, traits and rarity live in `assets/js/data.js`, transcribed from
+`traits.md`.

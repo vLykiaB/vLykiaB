@@ -1,263 +1,206 @@
 /* ===========================================================================
-   OTTR — Otter Society | Arayüz
+   OTTR — Otter Society | Shared behaviour for both pages
    =========================================================================== */
 (function () {
   "use strict";
 
-  const $  = (sel, root) => (root || document).querySelector(sel);
-  const $$ = (sel, root) => Array.from((root || document).querySelectorAll(sel));
+  const $  = (s, r) => (r || document).querySelector(s);
+  const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
 
   const esc = (s) => String(s)
     .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 
-  /* ---- parça görseli: gerçek dosya varsa onu, yoksa prosedürel çizim ---- */
-  function artFor(otter, eager) {
-    if (otter.img) {
-      return `<img src="${esc(otter.img)}" alt="${esc(COLLECTION.name)} #${otter.id} — ${esc(otter.name)}"
-                   loading="${eager ? "eager" : "lazy"}" decoding="async" width="600" height="600">`;
-    }
-    return otterSVG(otter);
-  }
+  const pad   = (n) => String(n).padStart(2, "0");
+  const art   = (p) => `assets/img/otters/${pad(p.id)}.webp`;
+  const isNil = (v) => v === "—" || v === "None" || v === "";
 
-  /* ================= OpenSea bağlantıları ================= */
-  ["nav-opensea", "nav-opensea-m", "hero-opensea", "footer-opensea"].forEach((id) => {
+  /* ---------- OpenSea links ---------- */
+  ["mast-os", "open-os", "foot-os"].forEach((id) => {
     const el = document.getElementById(id);
     if (el) el.href = COLLECTION.opensea;
   });
 
-  /* ================= Hero ================= */
-  $("#hero-name").textContent = COLLECTION.name;
-  $("#hero-tagline").textContent = COLLECTION.tagline;
-
-  $("#hero-stats").innerHTML = [
-    ["Parça", COLLECTION.supply],
-    ["Edisyon", "1 / 1"],
-    ["Zincir", COLLECTION.chain],
-    ["Standart", COLLECTION.standard],
-  ].map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("");
-
-  // Hero'da yüzen dört parça
-  $("#hero-otters").innerHTML = [OTTERS[0], OTTERS[8], OTTERS[9], OTTERS[7]]
-    .map((o) => `<div class="float">${otterSVG(o)}</div>`).join("");
-
-  /* ================= Ticker ================= */
-  const tickerWords = [
-    "Ten Otters", "One Society", "Every Piece A One Of One",
-    `${COLLECTION.chain} Chain`, COLLECTION.standard,
-    "Calm Knit", "Street Chain", `By ${COLLECTION.creator}`,
-  ];
-  const line = tickerWords.map((w) => `<span lang="en">${esc(w)}</span>`).join("");
-  $("#ticker-track").innerHTML = line + line; // -50% kaydırma için iki kopya
-
-  /* ================= Giriş ================= */
-  $("#intro-text").textContent = COLLECTION.intro;
-  $("#intro-facts").innerHTML = [
-    ["Yaratıcı", COLLECTION.creator],
-    ["Zincir", COLLECTION.chain],
-    ["Standart", `${COLLECTION.standard} — açık koleksiyon`],
-    ["Arz", `${COLLECTION.supply} parça · ${COLLECTION.editionNote}`],
-    ["Creator fee", COLLECTION.creatorFee],
-    ["Listing süresi", COLLECTION.listingDuration],
-  ].map(([k, v]) => `<li><b>${esc(k)}</b><span>${esc(v)}</span></li>`).join("");
-
-  /* ================= Koleksiyon ızgarası ================= */
-  const grid = $("#otter-grid");
-  grid.innerHTML = OTTERS.map((o, i) => `
-    <button class="card" data-id="${o.id}" data-tier="${esc(o.tier)}"
-            aria-label="${esc(o.name)} detaylarını aç">
-      <div class="card-art">
-        <span class="card-id">#${String(o.id).padStart(2, "0")}</span>
-        ${artFor(o, i < 4)}
-      </div>
-      <div class="card-body">
-        <h3 class="card-name">${esc(o.name)}</h3>
-        <div class="card-meta">
-          <span class="tier tier-${esc(o.tier)}" lang="en">${esc(TIERS[o.tier].label)}</span>
-          <span class="card-rank">#${o.rank} / ${COLLECTION.supply}</span>
+  /* ---------- plate markup, shared by both pages ---------- */
+  function plate(p, eager) {
+    return `
+      <button class="plate reveal" data-id="${p.id}" aria-label="${esc(p.name)} — open details">
+        <div class="plate-art">
+          <img src="${art(p)}" width="1200" height="1200"
+               alt="Otter Society #${pad(p.id)} — ${esc(p.name)}"
+               loading="${eager ? "eager" : "lazy"}" decoding="async">
         </div>
-      </div>
-    </button>`).join("");
+        <div class="plate-cap">
+          <span class="plate-no">No. ${pad(p.id)}</span>
+          <h3 class="plate-name">${esc(p.name)}</h3>
+          <span class="plate-tier">${esc(TIERS[p.tier].label)}</span>
+        </div>
+      </button>`;
+  }
 
-  /* ---- filtreler ---- */
-  $$(".chip").forEach((chip) => {
-    chip.addEventListener("click", () => {
-      $$(".chip").forEach((c) => c.classList.toggle("is-active", c === chip));
-      const f = chip.dataset.filter;
-      $$(".card", grid).forEach((card) => {
-        card.hidden = f !== "all" && card.dataset.tier !== f;
-      });
-    });
-  });
+  /* ---------- footer, shared ---------- */
+  const footTag = $("#foot-tagline");
+  if (footTag) footTag.textContent = COLLECTION.standfirst;
 
-  /* ================= Gardırop ================= */
-  $("#slot-grid").innerHTML = WARDROBE.map((s) => `
-    <article class="slot ${s.filled ? "" : "is-empty"}">
-      <div class="slot-head">
-        <h3>${esc(s.slot)}</h3>
-        <span class="slot-flag ${s.filled ? "on" : "off"}">${s.filled ? "Dolu" : "Boş"}</span>
-      </div>
-      <p>${esc(s.desc)}</p>
-    </article>`).join("");
+  const footMeta = $("#foot-meta");
+  if (footMeta) {
+    footMeta.innerHTML = [
+      ["Chain", esc(COLLECTION.chain)],
+      ["Standard", esc(`${COLLECTION.standard} — ${COLLECTION.standardNote}`)],
+      ["Supply", esc(`${COLLECTION.supply} pieces · ${COLLECTION.edition} each`)],
+      ["Creator fee", esc(COLLECTION.creatorFee)],
+      ["Contract", `<span class="foot-contract">${esc(COLLECTION.contract)}</span>`],
+    ].map(([k, v]) => `<div><b>${esc(k)}</b><span>${v}</span></div>`).join("");
+  }
 
-  /* ================= Nadirlik ================= */
-  const byRegister = (r) => OTTERS.filter((o) => o.register === r);
-  const countText = (r) => {
-    const list = byRegister(r);
-    return `${list.length} parça — ${list.map((o) => "#" + o.id).join(", ")}`;
-  };
-  $("#count-knit").textContent  = countText("knit");
-  $("#count-chain").textContent = countText("chain");
-  $("#count-scene").textContent = countText("scene");
+  const credit = $("#foot-credit");
+  if (credit) {
+    credit.textContent =
+      `${COLLECTION.name} — ${COLLECTION.creator} · ${new Date().getFullYear()}`;
+  }
 
-  const maxRank = Math.max.apply(null, OTTERS.map((o) => o.rank));
-  $("#ladder-list").innerHTML = OTTERS.slice().sort((a, b) => a.rank - b.rank).map((o) => `
-    <li>
-      <span class="lad-rank">#${String(o.id).padStart(2, "0")}</span>
-      <span class="lad-name">${esc(o.name)}</span>
-      <span class="tier tier-${esc(o.tier)}" lang="en">${esc(TIERS[o.tier].label)}</span>
-      <span class="lad-bar" style="width:${Math.round((o.rank / maxRank) * 55) + 6}%"></span>
-    </li>`).join("");
+  /* ======================= LANDING PAGE ======================= */
+  const tagline = $("#tagline");
+  if (tagline) {
+    tagline.textContent = COLLECTION.tagline;
+    $("#standfirst").textContent = COLLECTION.standfirst;
 
-  /* ================= Yol haritası ================= */
-  const statusLabel = { done: "Tamam", active: "Devam ediyor", next: "Sırada" };
-  $("#timeline").innerHTML = ROADMAP.map((r) => `
-    <article class="tl is-${esc(r.status)}">
-      <span class="tl-status">${esc(statusLabel[r.status] || r.status)}</span>
-      <p class="tl-phase">${esc(r.phase)}</p>
-      <h3>${esc(r.title)}</h3>
-      <p>${esc(r.body)}</p>
-    </article>`).join("");
+    const short = COLLECTION.contract.slice(0, 6) + "…" + COLLECTION.contract.slice(-4);
+    $("#facts").innerHTML = [
+      ["Chain", COLLECTION.chain, ""],
+      ["Standard", COLLECTION.standard, ""],
+      ["Supply", COLLECTION.supply, ""],
+      ["Edition", COLLECTION.edition, ""],
+      ["Contract", short, "mono"],
+    ].map(([k, v, cls]) =>
+      `<div><dt>${esc(k)}</dt><dd class="${cls}"${
+        cls ? ` title="${esc(COLLECTION.contract)}"` : ""
+      }>${esc(v)}</dd></div>`).join("");
 
-  /* ================= SSS ================= */
-  $("#faq-list").innerHTML = FAQ.map((f) => `
-    <details>
-      <summary>${esc(f.q)}</summary>
-      <p class="faq-a">${esc(f.a)}</p>
-    </details>`).join("");
+    // The three pieces furthest from plain knitwear
+    const featured = [10, 9, 8].map((id) => PIECES.find((p) => p.id === id));
+    $("#featured").innerHTML = featured.map((p) => plate(p, true)).join("");
 
-  /* ================= Footer ================= */
-  $("#footer-tagline").textContent = COLLECTION.tagline;
-  $("#footer-meta").innerHTML = [
-    ["Zincir", COLLECTION.chain],
-    ["Standart", COLLECTION.standard],
-    ["Arz", `${COLLECTION.supply} · ${COLLECTION.editionNote}`],
-    ["Creator fee", COLLECTION.creatorFee],
-  ].map(([k, v]) => `<div><b>${esc(k)}</b><span>${esc(v)}</span></div>`).join("");
-  $("#footer-credit").textContent =
-    `${COLLECTION.name} — ${COLLECTION.creator} · ${new Date().getFullYear()}`;
+    $("#rules").innerHTML = RULES.map((r, i) => `
+      <article class="rule-item reveal">
+        <span class="rule-num">${pad(i + 1)}</span>
+        <h3>${esc(r.title)}</h3>
+        <p>${esc(r.body)}</p>
+      </article>`).join("");
+  }
 
-  /* ================= Modal ================= */
-  const modal = $("#modal");
-  const modalBody = $("#modal-body");
+  /* ======================= COLLECTION PAGE ======================= */
+  const grid = $("#piece-grid");
+  if (grid) {
+    grid.innerHTML = PIECES.map((p, i) => plate(p, i < 2)).join("");
+
+    $("#dist").innerHTML = DISTRIBUTION.map((g) => `
+      <div class="dist-group reveal">
+        <h3>${esc(g.slot)}</h3>
+        ${g.values.map(([v, n]) => `
+          <div class="dist-row">
+            <span class="dv">${esc(v)}</span>
+            <span class="dc">${n} · ${n * 10}%</span>
+          </div>`).join("")}
+      </div>`).join("");
+
+    $("#slots").innerHTML = OPEN_SLOTS.map((s) => `
+      <div class="slot-row">
+        <dt>${esc(s.slot)}</dt>
+        <dd>${esc(s.values)}</dd>
+      </div>`).join("");
+  }
+
+  /* ======================= OVERLAY ======================= */
+  const ov = $("#ov");
+  const ovBody = $("#ov-body");
   let lastFocused = null;
 
-  function openOtter(id) {
-    const o = OTTERS.find((x) => x.id === Number(id));
-    if (!o) return;
+  function openPiece(id) {
+    const p = PIECES.find((x) => x.id === Number(id));
+    if (!p || !ov) return;
 
-    const traits = Object.entries(o.traits).map(([k, v]) => `
-      <li class="${v === "None" ? "is-none" : ""}">
-        <span class="t-key" lang="en">${esc(k)}</span>
-        <span class="t-val">${esc(v)}</span>
-      </li>`).join("");
+    const traits = Object.entries(p.traits).map(([k, v]) => `
+      <div class="${isNil(v) ? "is-none" : ""}">
+        <dt>${esc(k)}</dt>
+        <dd>${isNil(v) ? "None" : esc(v)}</dd>
+      </div>`).join("");
 
-    modalBody.innerHTML = `
+    ovBody.innerHTML = `
       <div class="detail">
-        <div class="detail-art" style="background:${esc((o.palette && o.palette.bg) || "#8ED4F5")}">${artFor(o, true)}</div>
+        <div class="detail-art">
+          <img src="assets/img/otters/master/${pad(p.id)}.webp"
+               width="2000" height="2000"
+               alt="Otter Society #${pad(p.id)} — ${esc(p.name)}" decoding="async">
+        </div>
         <div class="detail-body">
-          <p class="detail-tier">
-            <span class="tier tier-${esc(o.tier)}" lang="en">${esc(TIERS[o.tier].label)}</span>
-            <span class="detail-tier-note">${esc(TIERS[o.tier].note)}</span>
-          </p>
-          <h2 id="modal-title">#${String(o.id).padStart(2, "0")} ${esc(o.name)}</h2>
-          <p class="detail-blurb">${esc(o.blurb)}</p>
-          <ul class="trait-list">${traits}</ul>
-          <p style="margin-top:1.4rem">
-            <a class="btn btn-primary" href="${esc(COLLECTION.opensea)}"
-               target="_blank" rel="noopener noreferrer">OpenSea'de gör ↗</a>
-          </p>
+          <div class="detail-head">
+            <span class="plate-no">No. ${pad(p.id)}</span>
+            <span class="plate-tier">${esc(TIERS[p.tier].label)}</span>
+          </div>
+          <h2 id="ov-title">${esc(p.name)}</h2>
+          <p class="detail-note">${esc(p.note)}</p>
+          <dl class="traits">${traits}</dl>
+          <a class="tlink" href="${esc(COLLECTION.opensea)}" target="_blank" rel="noopener noreferrer">
+            View on OpenSea <span class="arrow" aria-hidden="true">&#8599;</span>
+          </a>
         </div>
       </div>`;
 
     lastFocused = document.activeElement;
-    modal.hidden = false;
+    ov.hidden = false;
     document.body.style.overflow = "hidden";
-    $(".modal-close", modal).focus();
+    $(".ov-close", ov).focus();
   }
 
-  function closeModal() {
-    modal.hidden = true;
-    modalBody.innerHTML = "";
+  function closeOverlay() {
+    if (!ov || ov.hidden) return;
+    ov.hidden = true;
+    ovBody.innerHTML = "";
     document.body.style.overflow = "";
     if (lastFocused) lastFocused.focus();
   }
 
-  grid.addEventListener("click", (e) => {
-    const card = e.target.closest(".card");
-    if (card) openOtter(card.dataset.id);
-  });
-  modal.addEventListener("click", (e) => { if (e.target.hasAttribute("data-close")) closeModal(); });
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !modal.hidden) closeModal(); });
-
-  // Modal açıkken odağı içeride tut
-  modal.addEventListener("keydown", (e) => {
-    if (e.key !== "Tab") return;
-    const f = $$('a[href], button, [tabindex]:not([tabindex="-1"])', modal)
-      .filter((el) => el.offsetParent !== null);
-    if (!f.length) return;
-    const first = f[0], last = f[f.length - 1];
-    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  // Plates exist on both pages; the overlay only on the collection page.
+  document.addEventListener("click", (e) => {
+    const p = e.target.closest(".plate");
+    if (!p) return;
+    if (ov) openPiece(p.dataset.id);
+    else window.location.href = "collection.html";
   });
 
-  /* ================= Mobil menü ================= */
-  const toggle = $("#nav-toggle");
-  const mobile = $("#nav-mobile");
-  toggle.addEventListener("click", () => {
-    const open = mobile.hidden;
-    mobile.hidden = !open;
-    toggle.setAttribute("aria-expanded", String(open));
-  });
-  $$("a", mobile).forEach((a) => a.addEventListener("click", () => {
-    mobile.hidden = true;
-    toggle.setAttribute("aria-expanded", "false");
-  }));
+  if (ov) {
+    ov.addEventListener("click", (e) => {
+      if (e.target.hasAttribute("data-close")) closeOverlay();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeOverlay();
+    });
+    ov.addEventListener("keydown", (e) => {
+      if (e.key !== "Tab") return;
+      const f = $$('a[href], button, [tabindex]:not([tabindex="-1"])', ov)
+        .filter((el) => el.offsetParent !== null);
+      if (!f.length) return;
+      const first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
+  }
 
-  /* ================= Scroll reveal ================= */
-  // Kartları ve slotları da listeye kat
-  $$(".card, .slot, .tl, .faq details").forEach((el, i) => {
-    el.classList.add("reveal");
-    el.style.transitionDelay = (i % 6) * 55 + "ms";
-  });
+  /* ======================= REVEAL ======================= */
+  const reveals = $$(".reveal");
+  reveals.forEach((el, i) => { el.style.transitionDelay = (i % 4) * 60 + "ms"; });
 
   if ("IntersectionObserver" in window) {
     const io = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-in");
-          io.unobserve(entry.target);
-        }
-      });
-    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
-    $$(".reveal").forEach((el) => io.observe(el));
-  } else {
-    $$(".reveal").forEach((el) => el.classList.add("is-in"));
-  }
-
-  /* ================= Aktif menü bağlantısı ================= */
-  const sections = ["about", "collection", "wardrobe", "rarity", "roadmap", "faq"]
-    .map((id) => document.getElementById(id)).filter(Boolean);
-  const navLinks = $$(".nav-links a");
-
-  if ("IntersectionObserver" in window && sections.length) {
-    const spy = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
         if (!entry.isIntersecting) return;
-        navLinks.forEach((a) =>
-          a.classList.toggle("is-current", a.getAttribute("href") === "#" + entry.target.id));
+        entry.target.classList.add("is-in");
+        io.unobserve(entry.target);
       });
-    }, { rootMargin: "-45% 0px -50% 0px" });
-    sections.forEach((s) => spy.observe(s));
+    }, { rootMargin: "0px 0px -5% 0px", threshold: 0.02 });
+    reveals.forEach((el) => io.observe(el));
+  } else {
+    reveals.forEach((el) => el.classList.add("is-in"));
   }
 })();
