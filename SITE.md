@@ -48,16 +48,50 @@ token IDs. Nothing else needs editing.
 
 ## Design
 
-Quiet luxury: bone paper, hairline rules, Cormorant Garamond for display, Inter
-for everything small. The artwork supplies the only colour on the page.
+Quiet luxury in the collection's own blue: pale blue paper, deep teal bars,
+hairline rules, Cormorant Garamond for display, Inter for everything small.
 
-Tokens live in `:root` at the top of `style.css`. House rules:
+Tokens live in `:root` at the top of `style.css`. They were sampled from the
+artwork, not invented — logo `#75CFFC`, banner `#5EACC2`, the four teal pieces
+`#55A8AE`.
+
+**The bar is `#1C6B82`, not the logo blue, and that is deliberate.** White text
+on the logo's `#75CFFC` is 1.7:1 — unreadable. Deepening the same hue gets white
+to 6:1. If you change `--night`, re-check it; the verification script asserts it.
+
+Every text/background pair clears WCAG AA (4.5:1):
+
+| Pair | Ratio |
+|---|---|
+| white on `--night` | 6.04:1 |
+| `--ink` on `--paper` | 14.79:1 |
+| `--ink-2` on `--paper` | 5.94:1 |
+| `--ink-3` on `--paper` | 4.85:1 |
+| `--brass` on `--paper` | 4.76:1 |
+
+House rules:
 
 - Borders are `1px` and nothing else. No shadows, no border radius.
 - `--brass` is for hairlines and small marks only — never a fill.
 - Hover is an opacity shift or a hairline darkening. Nothing moves.
 - Both pages are `lang="en"`. Keep it that way — CSS `text-transform:
   uppercase` under `lang="tr"` turns "REGISTER" into "REGİSTER".
+
+## Social links
+
+`SOCIAL` in `data.js` drives the X and Discord marks in the masthead and footer:
+
+```js
+const SOCIAL = [
+  { name: "X",       url: null },
+  { name: "Discord", url: null },
+];
+```
+
+`url: null` renders an inert symbol — present, dimmed, navigating nowhere,
+because the accounts are not open yet. **To switch one on, set its `url`.** It
+becomes a real link with no markup change. Never substitute `url: "#"`; that
+produces a link that reloads the page.
 
 ## Deploying
 

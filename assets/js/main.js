@@ -38,6 +38,31 @@
       </button>`;
   }
 
+  /* ---------- social marks, shared ----------
+     Inline SVG because the page CSP blocks remote images. A null url renders
+     an inert symbol, never an <a> pointing nowhere. */
+  const GLYPH = {
+    X: '<path d="M13.1 1.5h2.4l-5.2 6 6.2 8.2h-4.9l-3.8-5-4.4 5H1l5.6-6.4L.7 1.5h5l3.5 4.6 3.9-4.6Zm-.9 13.1h1.4L4.9 2.9H3.4l8.8 11.7Z"/>',
+    Discord: '<path d="M13.6 3.2A11 11 0 0 0 11 2.3l-.2.4a9 9 0 0 0-3.6 0L7 2.3a11 11 0 0 0-2.7.9C2.6 5.7 2.1 8.2 2.3 10.6a11 11 0 0 0 3.3 1.7l.7-1.1-1.2-.6.3-.2a7.8 7.8 0 0 0 6.7 0l.3.2-1.2.6.7 1.1a11 11 0 0 0 3.3-1.7c.3-2.8-.5-5.3-1.6-7.4ZM6.4 9.2c-.6 0-1.2-.6-1.2-1.4s.5-1.4 1.2-1.4 1.2.6 1.2 1.4-.5 1.4-1.2 1.4Zm3.2 0c-.6 0-1.2-.6-1.2-1.4s.5-1.4 1.2-1.4 1.2.6 1.2 1.4-.5 1.4-1.2 1.4Z"/>',
+  };
+
+  function socialMarkup() {
+    return SOCIAL.map((s) => {
+      const svg = `<svg viewBox="0 0 18 18" aria-hidden="true">${GLYPH[s.name] || ""}</svg>`;
+      return s.url
+        ? `<a class="social-mark" href="${esc(s.url)}" target="_blank"
+              rel="noopener noreferrer" aria-label="${esc(s.name)}">${svg}</a>`
+        : `<span class="social-mark is-soon" role="img"
+                 aria-label="${esc(s.name)} — coming soon"
+                 title="${esc(s.name)} — coming soon">${svg}</span>`;
+    }).join("");
+  }
+
+  ["mast-social", "foot-social"].forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = socialMarkup();
+  });
+
   /* ---------- footer, shared ---------- */
   const footTag = $("#foot-tagline");
   if (footTag) footTag.textContent = COLLECTION.standfirst;

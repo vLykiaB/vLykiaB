@@ -5,14 +5,17 @@
    =========================================================================== */
 
 :root {
-  --paper:  #F3F0E9;
-  --panel:  #EAE5DA;
-  --ink:    #16150F;
-  --ink-2:  #5E584E;
-  --ink-3:  #8A8378;
-  --rule:   #D5CEC1;
-  --brass:  #8A7248;
-  --night:  #14130F;
+  /* Sampled from the collection itself: logo #75CFFC, banner #5EACC2,
+     the four teal pieces #55A8AE. The bar takes a deepened teal so white
+     text on it clears WCAG AA — white on the logo blue is only 1.7:1. */
+  --paper:  #EFF7FB;
+  --panel:  #E2EEF5;
+  --ink:    #10242B;
+  --ink-2:  #45636D;
+  --ink-3:  #55707B;
+  --rule:   #C9DCE6;
+  --brass:  #8A6733;
+  --night:  #1C6B82;
 
   --serif: "Cormorant Garamond", "Times New Roman", Times, serif;
   --sans:  "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -75,8 +78,8 @@ button { font: inherit; color: inherit; background: none; border: 0; }
      "ERC-ıı55". Force lining figures wherever the serif carries numbers. */
   font-variant-numeric: lining-nums;
 }
-.d-xl { font-size: clamp(3rem, 8.5vw, 6.5rem); }
-.d-lg { font-size: clamp(2.4rem, 5.5vw, 4rem); }
+.d-xl { font-size: clamp(2.6rem, 7vw, 5.25rem); }
+.d-lg { font-size: clamp(2rem, 4.6vw, 3.25rem); }
 .d-md { font-size: clamp(1.6rem, 3vw, 2.3rem); line-height: 1.1; }
 
 .label {
@@ -133,7 +136,42 @@ button { font: inherit; color: inherit; background: none; border: 0; }
   font-size: 1.5rem; letter-spacing: .34em;
   color: var(--paper); padding-left: .2rem;
 }
-.mast-nav { display: flex; gap: 2rem; }
+.mast-brand-sub { letter-spacing: .12em; }
+/* The full lockup plus the nav will not fit a 390px bar, and the nav is the
+   part that has to stay reachable. */
+@media (max-width: 620px) { .mast-brand-sub { display: none; } }
+
+.mast-nav { display: flex; align-items: center; gap: 2rem; }
+/* The social marks pushed the bar past 390px. Tighten the whole row rather
+   than dropping a mark — both have to stay visible. */
+@media (max-width: 560px) {
+  .mast-nav { gap: 1rem; }
+  .mast-nav a { font-size: .64rem; letter-spacing: .14em; }
+  .mast-inner { gap: 1rem; }
+  .mast-brand { font-size: 1.3rem; letter-spacing: .26em; }
+  .social { gap: .35rem; }
+  .social-mark { width: 24px; height: 24px; }
+  .social-mark svg { width: 14px; height: 14px; }
+}
+
+/* ---------- social marks ---------- */
+.social { display: inline-flex; align-items: center; gap: .9rem; }
+.social-mark {
+  display: grid; place-items: center;
+  width: 30px; height: 30px; padding: 0;
+  color: currentColor; text-decoration: none;
+  transition: opacity .4s var(--ease);
+}
+.social-mark svg { width: 16px; height: 16px; fill: currentColor; display: block; }
+/* No account exists yet, so the mark is present but deliberately inert —
+   never a dead link that navigates nowhere. */
+.social-mark.is-soon { opacity: .42; cursor: default; }
+.social-mark:not(.is-soon) { opacity: .62; }
+.social-mark:not(.is-soon):hover { opacity: 1; }
+
+.mast .social-mark { color: var(--paper); }
+.foot .social { margin-top: 1.6rem; }
+.foot .social-mark { color: var(--paper); }
 .mast-nav a {
   text-decoration: none;
   font-size: .7rem; font-weight: 500;
@@ -155,9 +193,21 @@ button { font: inherit; color: inherit; background: none; border: 0; }
 
 /* ---------- opening ---------- */
 .opening { padding: clamp(4rem, 9vw, 7.5rem) 0 clamp(3.5rem, 7vw, 6rem); text-align: center; }
-.opening-banner { max-width: 520px; margin: 0 auto clamp(2.5rem, 5vw, 4rem); }
+.opening-banner { max-width: 520px; margin-inline: auto; }
 .opening-banner img { width: 100%; }
-.opening .d-xl { margin-bottom: 1.8rem; }
+.opening .d-xl { margin-bottom: 1.2rem; }
+.lockup { display: inline-block; }
+.lockup-sub {
+  display: block; margin-top: .5rem; padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+  font-size: .42em; letter-spacing: .14em; color: var(--ink-2);
+}
+.opening-sub {
+  font-family: var(--serif); font-weight: 300;
+  font-size: clamp(1.4rem, 2.6vw, 1.9rem); line-height: 1.25;
+  color: var(--ink); margin: 0 0 1.4rem;
+}
+.opening-banner { margin-top: clamp(3rem, 6vw, 5rem); }
 .opening .standfirst { margin: 0 auto; }
 .opening-actions {
   display: flex; gap: 2.5rem; justify-content: center; flex-wrap: wrap;
@@ -290,7 +340,7 @@ button { font: inherit; color: inherit; background: none; border: 0; }
 .ov-backdrop { position: absolute; inset: 0; background: rgba(20, 19, 15, .86); }
 .ov-card {
   position: relative; z-index: 1;
-  width: min(100%, 1000px); max-height: 88vh; overflow-y: auto;
+  width: min(100%, 1080px); max-height: 88vh; overflow-y: auto;
   background: var(--paper);
   animation: ovIn .5s var(--ease);
 }
@@ -305,16 +355,15 @@ button { font: inherit; color: inherit; background: none; border: 0; }
 }
 .ov-close:hover { border-color: var(--ink); }
 
-.detail { display: grid; grid-template-columns: 1fr 1fr; }
+.detail { display: grid; grid-template-columns: 1fr 1fr; align-items: center; }
 @media (max-width: 760px) { .detail { grid-template-columns: 1fr; } }
-.detail-art { overflow: hidden; }
+/* The plate stays a complete square — cropping it to fill the text column's
+   height is what made this read as squashed. Centring instead splits any
+   leftover height evenly above and below, so it reads as matting. */
+.detail-art { overflow: hidden; background: var(--panel); align-self: stretch;
+              display: flex; align-items: center; }
 .detail-art img { width: 100%; aspect-ratio: 1; object-fit: cover; }
-/* Two-column layout: let the art fill the row the text column defines, so no
-   paper gap opens beneath a square image. */
-@media (min-width: 761px) {
-  .detail-art img { height: 100%; aspect-ratio: auto; }
-}
-.detail-body { padding: clamp(2rem, 4vw, 3rem); }
+.detail-body { padding: clamp(2.4rem, 4.5vw, 3.6rem); }
 .detail-head { display: flex; align-items: baseline; gap: 1rem; margin-bottom: .5rem; padding-right: 3.2rem; }
 .detail-body h2 { font-family: var(--serif); font-weight: 300; font-size: clamp(2rem, 4vw, 2.8rem); color: var(--ink); margin: 0 0 1rem; line-height: 1.05; }
 .detail-note { font-family: var(--serif); font-size: 1.15rem; line-height: 1.55; color: var(--ink); font-weight: 300; margin: 0 0 2rem; }

@@ -23,6 +23,15 @@ const COLLECTION = {
     "is allowed to travel from the others.",
 };
 
+/* Social accounts.
+   `url: null` renders the mark as an inert symbol rather than a link — the
+   accounts are not open yet. Fill a url in and it becomes a real link; no
+   markup change needed. */
+const SOCIAL = [
+  { name: "X",       url: null },
+  { name: "Discord", url: null },
+];
+
 /* Rarity tiers, floor to ceiling ------------------------------------------ */
 const TIERS = {
   common:    { label: "Common",    rank: 1 },
